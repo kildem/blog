@@ -50,6 +50,10 @@ describe Article do
         title2 = @art2[:title]
         @art1[:title].should =~ /(#{Regexp.escape(title1)}|#{Regexp.escape(title2)})/
       end
+      it "should create a single merged article" do
+	@art1.merge_with(@art2)
+	Article.find_by_title("title2").should be_nil
+      end
     end
   end
   

@@ -98,8 +98,12 @@ class Article < Content
     if (Article.exists?(art2))
       self.update_attribute(:body, self[:body] + " " + art2[:body])
       art2.comments.each do |c|
-        self.comments << c
+	c1 = c.clone
+        self.comments << c1
       end
+      self.save!
+      art2.destroy
+      art2 = nil
     end
   end
   class << self

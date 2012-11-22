@@ -93,7 +93,15 @@ class Article < Content
                                :published_at=, :just_published?])
 
   include Article::States
-
+  def merge_with(other_article_id)
+    art2 = Article.find_by_id(other_article_id)
+    if (Article.exists?(art2))
+      self.update_attribute(:body, self[:body] + " " + art2[:body])
+      art2.comments.each do |c|
+        self.comments << c
+      end
+    end
+  end
   class << self
     def last_draft(article_id)
       article = Article.find(article_id)
@@ -122,6 +130,7 @@ class Article < Content
 
   end
 
+  
   def year_url
     published_at.year.to_s
   end

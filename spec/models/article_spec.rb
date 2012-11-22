@@ -21,6 +21,38 @@ describe Article do
     end
   end
 
+  describe "merge two articles" do
+    before do
+      @admin = Factory.build(:user, :profile => Factory.build(:profile_admin, :label => Profile::ADMIN))
+      @publisher = Factory.build(:user, :profile => Factory.build(:profile_publisher))
+      @art1 = Factory(:article, :body => "text1", :author => @admin, :title => "title1")
+      @art2 = Factory(:article, :body => "text2", :author => @publisher, :title => "title2")      
+    end
+    describe "I am an admin" do
+      it "the merged article should contain the text of both previous articles" do
+	@art1.merge_with(@art2)
+	assert_equal "text1 text2", @art1[:body]
+      end
+      it "the merged article should have one author" do
+	@art1.merge_with(@art2)
+	resp = @art1.author.respond_to? :each
+	resp.should == false
+      end
+      it "Comments on each of the two original articles need to all carry over and point to the new, merged article" do
+        Factory(:comment, :article => @art1)
+	Factory(:comment, :article => @art2)
+	@art1.merge_with(@art2)
+	@art1.comments.count.should == 2
+      end
+      it "The title of the new article should be the title from either one of the merged articles" do
+        @art1.merge_with(@art2)
+        title1 = @art1[:title]
+        title2 = @art2[:title]
+        @art1[:title].should =~ /(#{Regexp.escape(title1)}|#{Regexp.escape(title2)})/
+      end
+    end
+  end
+  
   it "test_content_fields" do
     a = Article.new
     assert_equal [:body, :extended], a.content_fields

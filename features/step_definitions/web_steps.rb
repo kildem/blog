@@ -41,11 +41,18 @@ Given /^the blog is set up$/ do
                 :profile_id => 1,
                 :name => 'admin',
                 :state => 'active'})
+  User.create!({:login => 'publisher',
+                :password => 'aaaaaaaa',
+                :email => 'pub@snow.com',
+                :profile_id => 2,
+                :name => 'publisher',
+                :state => 'active'})
 end
 
-And /^I am logged into the admin panel$/ do
+And /^I am logged into the (user|admin) panel$/ do |filter|
   visit '/accounts/login'
-  fill_in 'user_login', :with => 'admin'
+  fill_in 'user_login', :with => 'admin' if filter == "admin"
+  fill_in 'user_login', :with => 'publisher' if filter == "user"
   fill_in 'user_password', :with => 'aaaaaaaa'
   click_button 'Login'
   if page.respond_to? :should
@@ -275,4 +282,10 @@ end
 
 Then /^show me the page$/ do
   save_and_open_page
+end
+
+Given /^the following articles exist:$/ do |articles_table|
+    articles_table.hashes.each do |article|
+            Article.create!(article)
+    end
 end

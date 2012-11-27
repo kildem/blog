@@ -1,0 +1,21 @@
+Feature: View categories
+  As a blog administrator
+  In order to classify the articles
+  I want to be able to assigne a category to an article
+  
+  Background:
+    Given the blog is set up
+    And I am logged into the admin panel
+    
+  Scenario: Successfully create new category and edit existing categories
+    Given I follow "Categories"
+    Then I fill in "category_name" with "music"
+    And I fill in "category_description" with "my best music"
+    And I press "Save"
+    Then I should see "Category was successfully saved"
+    
+    Given I follow "music"
+    And I fill in "category_description" with "my best rock music"
+    And I press "Save"
+    Then I should see "Category was successfully saved"
+    

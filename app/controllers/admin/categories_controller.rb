@@ -49,6 +49,8 @@ class Admin::CategoriesController < Admin::BaseController
   def save_category
     @category = @category || Category.new
     @category.attributes = params[:category]
+    @article = Article.new
+    @article.categories << @category
     
     if @category.save!
       flash[:notice] = _('Category was successfully saved.')

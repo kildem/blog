@@ -15,7 +15,10 @@ Feature: View categories
     Then I should see "Category was successfully saved"
     
     Given I follow "music"
+    Then I fill in "category_name" with "rock music"
     And I fill in "category_description" with "my best rock music"
     And I press "Save"
     Then I should see "Category was successfully saved"
+    And I should see "rock music"
+    And the category is saved
     

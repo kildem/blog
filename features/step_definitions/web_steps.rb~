@@ -43,8 +43,8 @@ Given /^the blog is set up$/ do
                 :state => 'active'})
   User.create!({:login => 'publisher',
                 :password => 'aaaaaaaa',
-                :email => 'joe@snow.com',
-                :profile_id => 1,
+                :email => 'pub@snow.com',
+                :profile_id => 2,
                 :name => 'publisher',
                 :state => 'active'})
 end
@@ -288,4 +288,12 @@ Given /^the following articles exist:$/ do |articles_table|
     articles_table.hashes.each do |article|
             Article.create!(article)
     end
+end
+
+Then /^the category is saved$/ do
+  puts "-----------------------------------------"
+  element = page.find(:xpath, '//form/@action')
+  puts element.text
+  puts "----------------------------------------------"
+  page.should have_xpath('//form[@action="/admin/categories/edit"]')
 end
